@@ -59,5 +59,4 @@ public class DownloadSorterTest {
     sorter.addSortSpec(regex, file);
     assertEquals(initialSize, sorter.getSortSpecs().size() - 1);
   }
-  // TODO
 }
