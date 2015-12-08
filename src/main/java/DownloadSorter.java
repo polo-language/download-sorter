@@ -29,9 +29,11 @@ public class DownloadSorter implements Runnable {
   }
 
   @Override
-  public void run() {}
-
-  void scan() {}
+  public void run() {
+    if (processor != null) {
+      processor.run();
+    }
+  }
 
   /** Sets the concrete processor. */
   void setProcessor(Processor processor) {
@@ -43,12 +45,12 @@ public class DownloadSorter implements Runnable {
     hotFolders.add(file);
   }
 
-  /** Get unmodifiable copy of the hot folders */
+  /** Get unmodifiable copy of the hot folders. */
   List getHotFolders() {
     return Collections.unmodifiableList(hotFolders);
   }
 
-  /** Get unmodifiable copy of the sort specs */
+  /** Get unmodifiable copy of the sort specs. */
   List getSortSpecs() {
     return Collections.unmodifiableList(sortSpecs);
   }
@@ -63,7 +65,7 @@ public class DownloadSorter implements Runnable {
     addSortSpec(Pattern.compile(patternString), new File(path));
   }
 
-  /** Returns the processor description */
+  /** Returns the processor description. */
   public String getProcessorDescription() {
     return (processor == null) ? null : processor.getDescription();
   }
