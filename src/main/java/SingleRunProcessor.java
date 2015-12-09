@@ -1,10 +1,10 @@
 package com.pololanguage.sorters;
 
-class SingleRunProcessor extends Processor {
+class SingleRunProcessor implements Processor {
   @Override
   public String getDescription() {
     return "Single run processor: " + 
-           "scans input directories and sorts once per run.";
+           "scans hot folders and sorts once per run.";
   }
 
   @Override

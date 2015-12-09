@@ -6,6 +6,19 @@ repositories {
 }
 
 dependencies {
-  compile localGroovy()
   testCompile 'junit:junit:4.12'
 }
+
+task testPrepCleanup << {
+  final def testOutDirName = 'tmp-test-out'
+  final def testOutDir = new File(buildDir, testOutDirName)
+
+  /* clean up old test outputs */
+  if (testOutDir.exists()) {
+    delete(testOutDir)
+  }
+  /* recreate directory for new test outputs */
+  testOutDir.mkdir()
+}
+
+test.dependsOn testPrepCleanup
