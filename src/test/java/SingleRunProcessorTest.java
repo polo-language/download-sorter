@@ -29,9 +29,13 @@ public class SingleRunProcessorTest {
     assertEquals(expectedDesc, sorter.getProcessorDescription());
   }
 
-  // TODO:
-  // create and add hot folder
-  // create output folders and add sort specs 
-  // run sort
-  // verify sort
+  @Test
+  public void testRun() {
+    sorter.addHotFolder();
+    // TODO:
+    // create and add hot folder
+    // create output folders and add sort specs 
+    // run sort
+    // verify sort
+  }
 }

@@ -2,23 +2,27 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
 
-task testPrepCleanup << {
-  final def testOutDirName = 'tmp-test-out'
-  final def testOutDir = new File(buildDir, testOutDirName)
+final def testDirName = 'test'
+final def testOriginalsDirName = 'originals'
+final def testOutDirName = "$buildDir/tmp-test"
 
-  /* clean up old test outputs */
-  if (testOutDir.exists()) {
-    delete(testOutDir)
-  }
-  /* recreate directory for new test outputs */
-  testOutDir.mkdir()
+task testPrepCleanup(type: Delete) {
+    delete fileTree(dir: testOutDirName, include: '*')
 }
 
-test.dependsOn testPrepCleanup
+task testPrepDuplicateInputs(type: Copy) {
+    from "$testDirName/$testOriginalsDirName"
+    into "$testOutDirName/singlerun"
+}
+
+test.dependsOn {
+    testPrepCleanup
+    testPrepDuplicateInputs
+}
