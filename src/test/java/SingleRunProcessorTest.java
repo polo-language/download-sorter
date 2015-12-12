@@ -4,16 +4,24 @@ import java.io.File;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SingleRunProcessorTest {
+  static final String inPath = System.getProperty("SINGLERUN_PATH");
+  static final String rootOutPath = System.getProperty("TEST_OUT_PATH");
   static DownloadSorter sorter;
   static Processor processor;
   static String description;
-  static final File outDir = new File("build/tmp-test-out/SingleRunProcessor");
-  static final File inDir = new File("test/in_01/");
+  static File inDir;
+  static File outDir;
 
   @BeforeClass
   public static void setup() {
+    assertNotNull(inPath);
+    assertNotNull(rootOutPath);
+
+    inDir = new File(inPath);
+    outDir = new File(rootOutPath, "singlerun");
     sorter =  new DownloadSorter();
     processor = new SingleRunProcessor();
     description = processor.getDescription();
@@ -31,7 +39,7 @@ public class SingleRunProcessorTest {
 
   @Test
   public void testRun() {
-    sorter.addHotFolder();
+    //sorter.addHotFolder(inDir);
     // TODO:
     // create and add hot folder
     // create output folders and add sort specs 

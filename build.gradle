@@ -9,20 +9,26 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-final def testDirName = 'test'
-final def testOriginalsDirName = 'originals'
-final def testOutDirName = "$buildDir/tmp-test"
+final String testDirName = 'test'
+final String testOriginalsDirName = 'originals'
+final String testOutPath = "$buildDir/tmp-test"
+final String singleRunPath = "$testOutPath/singlerun"
 
 task testPrepCleanup(type: Delete) {
-    delete fileTree(dir: testOutDirName, include: '*')
+    delete fileTree(dir: testOutPath, include: '*')
 }
 
 task testPrepDuplicateInputs(type: Copy) {
     from "$testDirName/$testOriginalsDirName"
-    into "$testOutDirName/singlerun"
+    into singleRunPath
 }
 
-test.dependsOn {
-    testPrepCleanup
-    testPrepDuplicateInputs
+test {
+    dependsOn {
+        testPrepCleanup
+        testPrepDuplicateInputs
+    }
+
+    systemProperty "TEST_OUT_PATH", testOutPath
+    systemProperty "SINGLERUN_PATH", singleRunPath
 }
