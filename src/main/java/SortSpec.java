@@ -1,22 +1,23 @@
 package com.pololanguage.sorters;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 /**
  * Immutable class holding regex sort rule and destination folder for matches.
  */
 public class SortSpec {
-  final Pattern rule;
-  final File folder;
+  public final Pattern rule;
+  public final Path dir;
 
-  SortSpec(Pattern rule, File folder) {
+  SortSpec(Pattern rule, Path dir) {
     this.rule = rule;
-    this.folder = folder;
+    this.dir = dir;
   }
 
-  SortSpec(String rule, String folder) {
+  SortSpec(String rule, String dir) {
     this.rule = Pattern.compile(rule);
-    this.folder = new File(folder);
+    this.dir = Paths.get(dir);
   }
 }

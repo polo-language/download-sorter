@@ -1,6 +1,7 @@
 package com.pololanguage.sorters;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class DownloadSorter implements Runnable {
   /** List of folders to scan for matches - 'hot folders' */
-  final private ArrayList<File> hotFolders;
+  final private ArrayList<Path> hotFolders;
 
   /** List of sort rules and destination folders */
   final private ArrayList<SortSpec> sortSpecs;
@@ -41,8 +42,8 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Adds input directory to list. */
-  void addHotFolder(File file) {
-    hotFolders.add(file);
+  void addHotFolder(Path dir) {
+    hotFolders.add(dir);
   }
 
   /** Get unmodifiable copy of the hot folders. */
@@ -56,13 +57,13 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Adds SortSpec to list. */
-  void addSortSpec(Pattern pattern, File folder) {
-    sortSpecs.add(new SortSpec(pattern, folder));
+  void addSortSpec(Pattern pattern, Path dir) {
+    sortSpecs.add(new SortSpec(pattern, dir));
   }
 
   /** Adds SortSpec to list - all arguments String. */
   void addSortSpec(String patternString, String path) {
-    addSortSpec(Pattern.compile(patternString), new File(path));
+    addSortSpec(Pattern.compile(patternString), Paths.get(path));
   }
 
   /** Returns the processor description. */

@@ -1,10 +1,14 @@
 package com.pololanguage.sorters;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class SingleRunProcessorTest {
   static final String inPath = System.getProperty("SINGLERUN_PATH");
@@ -12,21 +16,25 @@ public class SingleRunProcessorTest {
   static DownloadSorter sorter;
   static Processor processor;
   static String description;
-  static File inDir;
-  static File outDir;
+  static Path inDir;
+  static Path outDir;
 
   @BeforeClass
   public static void setup() {
     assertNotNull(inPath);
     assertNotNull(rootOutPath);
 
-    inDir = new File(inPath);
-    outDir = new File(rootOutPath, "singlerun");
+    inDir = Paths.get(inPath);
+    outDir = Paths.get(rootOutPath, "singlerun");
     sorter =  new DownloadSorter();
     processor = new SingleRunProcessor();
     description = processor.getDescription();
     sorter.setProcessor(processor);
-    outDir.mkdir();
+    try {
+      Files.createDirectory(outDir);
+    } catch (IOException err) {
+      fail("Unable to create output directory for test: "+ outDir);
+    }
   }
 
   @Test

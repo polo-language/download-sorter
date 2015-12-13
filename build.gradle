@@ -11,11 +11,13 @@ dependencies {
 
 final String testDirName = 'test'
 final String testOriginalsDirName = 'originals'
-final String testOutPath = "$buildDir/tmp-test"
-final String singleRunPath = "$testOutPath/singlerun"
+final String testTempDirName = "tmp-test"
+final String inRootPath = "$buildDir/$testTempDirName/in"
+final String outRootPath = "$buildDir/$testTempDirName/out"
+final String singleRunPath = "$inRootPath/singlerun"
 
 task testPrepCleanup(type: Delete) {
-    delete fileTree(dir: testOutPath, include: '*')
+    delete fileTree(dir: "$buildDir/$testTempDirName", include: '*')
 }
 
 task testPrepDuplicateInputs(type: Copy) {
@@ -23,12 +25,17 @@ task testPrepDuplicateInputs(type: Copy) {
     into singleRunPath
 }
 
+task testPrepCreateOutDir {
+    file(outRootPath).mkdir()
+}
+
 test {
     dependsOn {
         testPrepCleanup
+        testPrepCreateOutDir
         testPrepDuplicateInputs
     }
 
-    systemProperty "TEST_OUT_PATH", testOutPath
+    systemProperty "TEST_OUT_PATH", outRootPath
     systemProperty "SINGLERUN_PATH", singleRunPath
 }
