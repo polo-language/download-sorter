@@ -25,15 +25,14 @@ public class SingleRunProcessorTest {
     assertNotNull(rootOutPath);
 
     inDir = Paths.get(inPath);
-    outDir = Paths.get(rootOutPath, "singlerun");
     sorter =  new DownloadSorter();
     processor = new SingleRunProcessor();
     description = processor.getDescription();
     sorter.setProcessor(processor);
     try {
-      Files.createDirectory(outDir);
+      Files.createTempDirectory(Paths.get(rootOutPath), "singlerun_");
     } catch (IOException err) {
-      fail("Unable to create output directory for test: "+ outDir);
+      fail("Unable to create temp output directory for test in: "+ rootOutPath);
     }
   }
 
@@ -52,6 +51,6 @@ public class SingleRunProcessorTest {
     // create and add hot folder
     // create output folders and add sort specs 
     // run sort
-    // verify sort
+    // verify sort 
   }
 }

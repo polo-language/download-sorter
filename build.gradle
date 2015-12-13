@@ -16,23 +16,20 @@ final String inRootPath = "$buildDir/$testTempDirName/in"
 final String outRootPath = "$buildDir/$testTempDirName/out"
 final String singleRunPath = "$inRootPath/singlerun"
 
-task testPrepCleanup(type: Delete) {
-    delete fileTree(dir: "$buildDir/$testTempDirName", include: '*')
-}
-
 task testPrepDuplicateInputs(type: Copy) {
+    doFirst {
+        delete(file("$buildDir/$testTempDirName"))
+        file("$buildDir/$testTempDirName").mkdir()
+        file(inRootPath).mkdir()
+        file(outRootPath).mkdir()
+    }
+
     from "$testDirName/$testOriginalsDirName"
     into singleRunPath
 }
 
-task testPrepCreateOutDir {
-    file(outRootPath).mkdir()
-}
-
 test {
     dependsOn {
-        testPrepCleanup
-        testPrepCreateOutDir
         testPrepDuplicateInputs
     }
 
