@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Stores and processes regex sort rules to move/copy files from specified
@@ -42,8 +41,8 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Adds input directory to list. */
-  void addHotFolder(Path dir) {
-    hotFolders.add(dir);
+  void addHotFolder(String dir) {
+    hotFolders.add(Paths.get(dir));
   }
 
   /** Get unmodifiable copy of the hot folders. */
@@ -57,13 +56,8 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Adds SortSpec to list. */
-  void addSortSpec(Pattern pattern, Path dir) {
-    sortSpecs.add(new SortSpec(pattern, dir));
-  }
-
-  /** Adds SortSpec to list - all arguments String. */
-  void addSortSpec(String patternString, String path) {
-    addSortSpec(Pattern.compile(patternString), Paths.get(path));
+  void addSortSpec(String rule, String dir, RuleType type) {
+    sortSpecs.add(new SortSpec(rule, dir, type));
   }
 
   /** Returns the processor description. */

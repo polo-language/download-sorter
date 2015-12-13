@@ -1,7 +1,6 @@
 package com.pololanguage.sorters;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,20 +11,18 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class SingleRunProcessorTest {
-  static final String inPath = System.getProperty("SINGLERUN_PATH");
+  static final String inDir = System.getProperty("SINGLERUN_PATH");
   static final String rootOutPath = System.getProperty("TEST_OUT_PATH");
   static DownloadSorter sorter;
   static Processor processor;
   static String description;
-  static Path inDir;
   static Path outDir;
 
   @BeforeClass
   public static void setup() {
-    assertNotNull(inPath);
+    assertNotNull(inDir);
     assertNotNull(rootOutPath);
 
-    inDir = Paths.get(inPath);
     sorter =  new DownloadSorter();
     processor = new SingleRunProcessor();
     description = processor.getDescription();
@@ -47,7 +44,7 @@ public class SingleRunProcessorTest {
 
   @Test
   public void testRun() {
-    Pattern patternPDF = Pattern.compile("*.pdf");
+    String rule = ".*?\\.pdf";
     Path outPDF;
 
     try {
