@@ -15,17 +15,18 @@ public class SortSpecTest {
     final Path expectedDir = Paths.get(fakePathString);
     SortSpec spec_01 = new SortSpec(expectedPattern, expectedDir);
 
-    assertEquals(expectedPattern, spec_01.rule);
-    assertEquals(expectedDir, spec_01.dir);
+
+    assertEquals(expectedPattern.pattern(), spec_01.getRule());
+    assertEquals(expectedDir, Paths.get(spec_01.getDirectory()));
   }
 
   @Test
   public void testContstructorStrings() {
-    final String expectedPattern = "a*5\\\n";
+    final String expectedPatternString = "a*5\\\n";
     final String expectedDirString = fakePathString;
-    SortSpec spec_01 = new SortSpec(expectedPattern, expectedDirString);
+    SortSpec spec_01 = new SortSpec(expectedPatternString, expectedDirString);
 
-    assertEquals(expectedPattern, spec_01.rule.toString());
-    assertEquals(Paths.get(expectedDirString), spec_01.dir);
+    assertEquals(expectedPatternString, spec_01.getRule());
+    assertEquals(Paths.get(expectedDirString), Paths.get(spec_01.getDirectory()));
   }
 }

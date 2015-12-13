@@ -8,16 +8,24 @@ import java.util.regex.Pattern;
  * Immutable class holding regex sort rule and destination folder for matches.
  */
 public class SortSpec {
-  public final Pattern rule;
-  public final Path dir;
+  private final Pattern rule;
+  private final Path directory;
 
   SortSpec(Pattern rule, Path dir) {
     this.rule = rule;
-    this.dir = dir;
+    this.directory = dir;
   }
 
   SortSpec(String rule, String dir) {
     this.rule = Pattern.compile(rule);
-    this.dir = Paths.get(dir);
+    this.directory = Paths.get(dir);
+  }
+
+  public String getRule() {
+    return rule.pattern();
+  }
+
+  public String getDirectory() {
+    return directory.toString();
   }
 }

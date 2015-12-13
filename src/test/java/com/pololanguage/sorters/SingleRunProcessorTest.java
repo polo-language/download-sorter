@@ -1,6 +1,7 @@
 package com.pololanguage.sorters;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +31,7 @@ public class SingleRunProcessorTest {
     description = processor.getDescription();
     sorter.setProcessor(processor);
     try {
-      Files.createTempDirectory(Paths.get(rootOutPath), "singlerun_");
+      outDir = Files.createTempDirectory(Paths.get(rootOutPath), "singlerun_");
     } catch (IOException err) {
       fail("Unable to create temp output directory for test in: "+ rootOutPath);
     }
@@ -46,9 +47,16 @@ public class SingleRunProcessorTest {
 
   @Test
   public void testRun() {
-    //sorter.addHotFolder(inDir);
+    Pattern patternPDF = Pattern.compile("*.pdf");
+    Path outPDF;
+
+    try {
+      outPDF = Files.createTempDirectory(outDir, "PDF_");
+    } catch (IOException err) {
+      fail("Unable to create temp output directory for test in: "+ rootOutPath);
+    }
+    sorter.addHotFolder(inDir);
     // TODO:
-    // create and add hot folder
     // create output folders and add sort specs 
     // run sort
     // verify sort 
