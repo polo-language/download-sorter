@@ -1,9 +1,14 @@
 package com.pololanguage.sorters;
 
 import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
@@ -27,6 +32,7 @@ public class SingleRunProcessorTest {
     processor = new SingleRunProcessor();
     description = processor.getDescription();
     sorter.setProcessor(processor);
+
     try {
       outDir = Files.createTempDirectory(Paths.get(rootOutPath), "singlerun_");
     } catch (IOException err) {
@@ -43,19 +49,65 @@ public class SingleRunProcessorTest {
   }
 
   @Test
-  public void testRun() {
-    String rule = ".*?\\.pdf";
-    Path outPDF;
+  public void testRunGlob() {
+    final int NUM_EXPTECTED = 3;
+    String rule = "*.{jpg,jpeg}";
+    Path out;
+
+    sorter.addHotFolder(inDir);
+    try {
+      out = Files.createTempDirectory(outDir, "JPG_");
+    } catch (IOException err) {
+      fail("Unable to create temp output directory for test: "+ err.getMessage());
+      return; /* for the compiler */
+    }
+    sorter.addSortSpec(rule, out.toString(), RuleType.GLOB);
+
+    sorter.run();
 
     try {
-      outPDF = Files.createTempDirectory(outDir, "PDF_");
+      assertEquals(NUM_EXPTECTED, getNumMatches(out, rule, RuleType.GLOB));
     } catch (IOException err) {
-      fail("Unable to create temp output directory for test in: "+ rootOutPath);
+      fail(err.toString());
     }
+  }
+
+  @Test
+  public void testRunRegex() {
+    final int NUM_EXPTECTED = 2;
+    String rule = ".*?\\.pdf";
+    Path out;
+
     sorter.addHotFolder(inDir);
-    // TODO:
-    // create output folders and add sort specs 
-    // run sort
-    // verify sort 
+    try {
+      out = Files.createTempDirectory(outDir, "PDF_");
+    } catch (IOException err) {
+      fail("Unable to create temp output directory for test: "+ err.getMessage());
+      return; /* for the compiler */
+    }
+    sorter.addSortSpec(rule, out.toString(), RuleType.REGEX);
+
+    sorter.run();
+
+    try {
+      assertEquals(NUM_EXPTECTED, getNumMatches(out, rule, RuleType.REGEX));
+    } catch (IOException err) {
+      fail(err.toString());
+    }
+  }
+
+  /** Utility method to determine number of matching files in directory */
+  private int getNumMatches(Path dir, String rule, RuleType type) throws IOException {
+    int numMatches = 0;
+    PathMatcher matcher = FileSystems.getDefault().getPathMatcher(type.toString() +":"+ rule);
+
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+      for (Path file : stream) {
+        if (matcher.matches(file)) {
+          ++numMatches;
+        }
+      }
+    }
+    return numMatches;
   }
 }

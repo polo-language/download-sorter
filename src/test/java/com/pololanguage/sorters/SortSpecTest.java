@@ -12,7 +12,7 @@ public class SortSpecTest {
 
   @Test
   public void testContstructorGlob() {
-    final String expectedPatternString = "*\\.java";
+    final String expectedPatternString = "*.java";
     final String expectedDirString = fakePathString;
     SortSpec spec_01 = new SortSpec(expectedPatternString,
                                     expectedDirString,

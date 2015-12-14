@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Stores and processes regex sort rules to move/copy files from specified
- * hot folders to specified destination folders
+ * Stores and processes sort rules to move/copy files from specified
+ * hot folders to specified destination directories.
  */
 public class DownloadSorter implements Runnable {
   /** List of folders to scan for matches - 'hot folders' */
@@ -38,6 +38,7 @@ public class DownloadSorter implements Runnable {
   /** Sets the concrete processor. */
   void setProcessor(Processor processor) {
     this.processor = processor;
+    processor.initialize(getHotFolders(), getSortSpecs());
   }
 
   /** Adds input directory to list. */
@@ -45,19 +46,19 @@ public class DownloadSorter implements Runnable {
     hotFolders.add(Paths.get(dir));
   }
 
+  /** Adds SortSpec to list. */
+  void addSortSpec(String rule, String dir, RuleType type) {
+    sortSpecs.add(new SortSpec(rule, dir, type));
+  }
+
   /** Get unmodifiable copy of the hot folders. */
-  List getHotFolders() {
+  List<Path> getHotFolders() {
     return Collections.unmodifiableList(hotFolders);
   }
 
   /** Get unmodifiable copy of the sort specs. */
-  List getSortSpecs() {
+  List<SortSpec> getSortSpecs() {
     return Collections.unmodifiableList(sortSpecs);
-  }
-
-  /** Adds SortSpec to list. */
-  void addSortSpec(String rule, String dir, RuleType type) {
-    sortSpecs.add(new SortSpec(rule, dir, type));
   }
 
   /** Returns the processor description. */

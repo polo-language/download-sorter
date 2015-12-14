@@ -2,6 +2,7 @@ package com.pololanguage.sorters;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +23,12 @@ public class DownloadSorterTest {
     assertNull(sorter.getProcessorDescription());
     sorter.setProcessor(new Processor() {
       @Override
-      public void run() {}
+      public void run() { /* do nothing */ }
+      @Override
+      public void stop() { /* do nothing */ }
+      @Override
+      public void initialize(List hotFolders, List sortSpecs) { /* do nothing */ }
+
       @Override
       public String getDescription() {
         return description;
