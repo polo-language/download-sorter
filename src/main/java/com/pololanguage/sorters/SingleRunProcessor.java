@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Scans hot folders and sorts once per run.
  */
-class SingleRunProcessor implements Processor {
+public class SingleRunProcessor implements Processor {
   private List<Path> hotFolders;
   private List<SortSpec> sortSpecs;
 

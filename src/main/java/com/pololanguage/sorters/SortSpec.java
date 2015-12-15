@@ -30,7 +30,6 @@ public class SortSpec {
 
   /** Copies file to directory and returns true if it matches the rule. */
   boolean copyIfMatches(Path file) throws IOException {
-    //Path path = Paths.get(file);
     if (matches(file)) {
       Files.copy(file, directory.resolve(file.getFileName()), StandardCopyOption.COPY_ATTRIBUTES);
       return true;
@@ -40,7 +39,6 @@ public class SortSpec {
 
   /** Moves file to directory and returns true if it matches the rule */
   boolean moveIfMatches(Path file) throws IOException {
-    //Path path = Paths.get(file);
     if (matches(file)) {
       Files.move(file, directory.resolve(file.getFileName()), StandardCopyOption.ATOMIC_MOVE);
       return true;
