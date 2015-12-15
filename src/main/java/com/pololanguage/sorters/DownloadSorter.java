@@ -43,7 +43,10 @@ public class DownloadSorter implements Runnable {
 
   /** Adds input directory to list. */
   void addHotFolder(String dir) {
-    hotFolders.add(Paths.get(dir));
+    Path path = Paths.get(dir);
+    if (!hotFolders.contains(path)) {
+      hotFolders.add(path);
+    }
   }
 
   /** Adds SortSpec to list. */

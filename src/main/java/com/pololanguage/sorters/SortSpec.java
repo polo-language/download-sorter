@@ -25,7 +25,7 @@ public class SortSpec {
 
   /** Returns true if file matches the rule. */
   boolean matches(Path file) {
-    return matcher.matches(file);
+    return matcher.matches(file.getFileName());
   }
 
   /** Copies file to directory and returns true if it matches the rule. */

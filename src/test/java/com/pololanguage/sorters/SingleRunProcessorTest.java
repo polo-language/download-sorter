@@ -13,11 +13,12 @@ import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class SingleRunProcessorTest {
   static final String inDir = System.getProperty("SINGLERUN_PATH");
-  static final String rootOutPath = System.getProperty("TEST_OUT_PATH");
+  static final String ourRootDir = System.getProperty("TEST_OUT_PATH");
   static DownloadSorter sorter;
   static Processor processor;
   static String description;
@@ -26,17 +27,18 @@ public class SingleRunProcessorTest {
   @BeforeClass
   public static void setup() {
     assertNotNull(inDir);
-    assertNotNull(rootOutPath);
+    assertNotNull(ourRootDir);
 
     sorter =  new DownloadSorter();
     processor = new SingleRunProcessor();
     description = processor.getDescription();
     sorter.setProcessor(processor);
+    sorter.addHotFolder(inDir);
 
     try {
-      outDir = Files.createTempDirectory(Paths.get(rootOutPath), "singlerun_");
+      outDir = Files.createTempDirectory(Paths.get(ourRootDir), "singlerun_");
     } catch (IOException err) {
-      fail("Unable to create temp output directory for test in: "+ rootOutPath);
+      fail("Unable to create temp output directory for test in: "+ ourRootDir);
     }
   }
 
@@ -50,47 +52,35 @@ public class SingleRunProcessorTest {
 
   @Test
   public void testRunGlob() {
-    final int NUM_EXPTECTED = 3;
-    String rule = "*.{jpg,jpeg}";
-    Path out;
+    matchRunner(3, RuleType.GLOB, "*.{jpg,jpeg}", "GLOB_JPG");
+  }
 
-    sorter.addHotFolder(inDir);
-    try {
-      out = Files.createTempDirectory(outDir, "JPG_");
-    } catch (IOException err) {
-      fail("Unable to create temp output directory for test: "+ err.getMessage());
-      return; /* for the compiler */
-    }
-    sorter.addSortSpec(rule, out.toString(), RuleType.GLOB);
-
-    sorter.run();
-
-    try {
-      assertEquals(NUM_EXPTECTED, getNumMatches(out, rule, RuleType.GLOB));
-    } catch (IOException err) {
-      fail(err.toString());
-    }
+  @Test
+  public void testRunGlobPrefix() {
+    matchRunner(2, RuleType.GLOB, "a*", "GLOB_A_PREFIX");
   }
 
   @Test
   public void testRunRegex() {
-    final int NUM_EXPTECTED = 2;
-    String rule = ".*?\\.pdf";
+    matchRunner(2, RuleType.REGEX, ".*?\\.pdf", "REGEX_PDF");
+  }
+
+  /** Utility method for running matching test */
+  private void matchRunner(final int EXPECTED, final RuleType type, final String rule, final String prefix) {
     Path out;
 
-    sorter.addHotFolder(inDir);
     try {
-      out = Files.createTempDirectory(outDir, "PDF_");
+      out = Files.createTempDirectory(outDir, prefix +"_");
     } catch (IOException err) {
       fail("Unable to create temp output directory for test: "+ err.getMessage());
       return; /* for the compiler */
     }
-    sorter.addSortSpec(rule, out.toString(), RuleType.REGEX);
+    sorter.addSortSpec(rule, out.toString(), type);
 
     sorter.run();
 
     try {
-      assertEquals(NUM_EXPTECTED, getNumMatches(out, rule, RuleType.REGEX));
+      assertEquals(EXPECTED, getNumMatches(out, rule, type));
     } catch (IOException err) {
       fail(err.toString());
     }
@@ -98,12 +88,12 @@ public class SingleRunProcessorTest {
 
   /** Utility method to determine number of matching files in directory */
   private int getNumMatches(Path dir, String rule, RuleType type) throws IOException {
+    final PathMatcher matcher = FileSystems.getDefault().getPathMatcher(type.toString() +":"+ rule);
     int numMatches = 0;
-    PathMatcher matcher = FileSystems.getDefault().getPathMatcher(type.toString() +":"+ rule);
 
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
       for (Path file : stream) {
-        if (matcher.matches(file)) {
+        if (matcher.matches(file.getFileName())) {
           ++numMatches;
         }
       }
