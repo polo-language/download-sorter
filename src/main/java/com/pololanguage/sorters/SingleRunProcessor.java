@@ -26,6 +26,14 @@ public class SingleRunProcessor implements Processor {
   }
 
   @Override
+  public void update() {
+    /*
+    Do nothing.
+    Processor reads current state on run, no need to update.
+    */
+  }
+
+  @Override
   public void run() {
     for (Path folder : hotFolders) {
       try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder)) {

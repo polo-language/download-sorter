@@ -15,8 +15,9 @@ final String testTempDirName = "tmp-test"
 final String inRootPath = "$buildDir/$testTempDirName/in"
 final String outRootPath = "$buildDir/$testTempDirName/out"
 final String singleRunPath = "$inRootPath/singlerun"
+final String watchServicePath = "$inRootPath/watchservice"
 
-task testPrepDuplicateInputs(type: Copy) {
+task testPrepDuplicateInputs() {
     doFirst {
         delete(file("$buildDir/$testTempDirName"))
         file("$buildDir/$testTempDirName").mkdir()
@@ -24,8 +25,17 @@ task testPrepDuplicateInputs(type: Copy) {
         file(outRootPath).mkdir()
     }
 
-    from "$testDirName/$testOriginalsDirName"
-    into singleRunPath
+    doLast {
+        copy {
+            from "$testDirName/$testOriginalsDirName"
+            into singleRunPath
+        }
+
+        copy {
+            from "$testDirName/$testOriginalsDirName"
+            into watchServicePath
+        }
+    }
 }
 
 test {
@@ -35,4 +45,5 @@ test {
 
     systemProperty "TEST_OUT_PATH", outRootPath
     systemProperty "SINGLERUN_PATH", singleRunPath
+    systemProperty "WATCHSERVICE_PATH", watchServicePath
 }

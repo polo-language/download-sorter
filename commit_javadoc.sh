@@ -21,9 +21,7 @@ if [ ! -d ".git" ]; then
   git init
 fi
 if [ "$remoteLocalName" != "$currentRemoteLocalName" ]; then
-  echo "$currentRemoteLocalName"
-  echo ""
-  echo "Setting remote to local name $remoteLocalName..."
+  echo "Adding remote..."
   git remote add "$remoteLocalName" git@"$remoteHost":polo-language/"$repoName".git
 fi
 

@@ -28,7 +28,9 @@ public class DownloadSorterTest {
       public void stop() { /* do nothing */ }
       @Override
       public void initialize(List hotFolders, List sortSpecs) { /* do nothing */ }
-
+      @Override
+      public void update() { /* do nothing */ }
+      
       @Override
       public String getDescription() {
         return description;
