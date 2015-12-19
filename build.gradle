@@ -15,7 +15,8 @@ final String testTempDirName = "tmp-test"
 final String inRootPath = "$buildDir/$testTempDirName/in"
 final String outRootPath = "$buildDir/$testTempDirName/out"
 final String singleRunPath = "$inRootPath/singlerun"
-final String watchServicePath = "$inRootPath/watchservice"
+final String watchRegexPath = "$inRootPath/watchregex"
+final String watchGlobPath = "$inRootPath/watchglob"
 
 task testPrepDuplicateInputs() {
     doFirst {
@@ -33,7 +34,12 @@ task testPrepDuplicateInputs() {
 
         copy {
             from "$testDirName/$testOriginalsDirName"
-            into watchServicePath
+            into watchRegexPath
+        }
+
+        copy {
+            from "$testDirName/$testOriginalsDirName"
+            into watchGlobPath
         }
     }
 }
@@ -45,5 +51,6 @@ test {
 
     systemProperty "TEST_OUT_PATH", outRootPath
     systemProperty "SINGLERUN_PATH", singleRunPath
-    systemProperty "WATCHSERVICE_PATH", watchServicePath
+    systemProperty "WATCH_REGEX_PATH", watchRegexPath
+    systemProperty "WATCH_GLOB_PATH", watchGlobPath
 }

@@ -23,7 +23,8 @@ import static org.junit.Assert.fail;
  * Watches hot-folders and sorts as changes occur.
  */
 public class WatchServiceProcessorTest {
-  static final String inDir = System.getProperty("WATCHSERVICE_PATH");
+  static final String inRegexDir = System.getProperty("WATCH_REGEX_PATH");
+  static final String inGlobDir = System.getProperty("WATCH_GLOB_PATH");
   static final String ourRootDir = System.getProperty("TEST_OUT_PATH");
   static DownloadSorter sorter;
   static Processor processor;
@@ -32,7 +33,8 @@ public class WatchServiceProcessorTest {
 
   @BeforeClass
   public static void setup() {
-    assertNotNull(inDir);
+    assertNotNull(inRegexDir);
+    assertNotNull(inGlobDir);
     assertNotNull(ourRootDir);
 
     sorter =  new DownloadSorter();
@@ -43,7 +45,8 @@ public class WatchServiceProcessorTest {
     }
     description = processor.getDescription();
     sorter.setProcessor(processor);
-    sorter.addHotFolder(inDir);
+    sorter.addHotFolder(inRegexDir);
+    sorter.addHotFolder(inGlobDir);
 
     try {
       outDir = Files.createTempDirectory(Paths.get(ourRootDir), "watchservice_");
@@ -62,6 +65,30 @@ public class WatchServiceProcessorTest {
 
   // TODO
   // test sorting files already in directory
+  @Test
+  public void testExistingFilesGlob() {
+    final SortSpec spec1 = new SortSpec("*.txt", "", RuleType.GLOB);
+    final Path out;
+
+    try {
+      out = Files.createTempDirectory(outDir, "TestExistingFilesGlob_");
+    } catch (IOException e) {
+      fail("Unable to create temp output directory for test: "+ e.getMessage());
+      return; /* for the compiler */
+    }
+
+    // TODO: add filters, run, stop
+  }
+
+  @Test
+  public void testAddFilesThenFilterGlob() {
+    // TODO: run, add files, add filter, stop
+  }
+
+  @Test
+  public void testAddFilterThenFilesGlob() {
+    // TODO: run, add filter, add files, stop
+  }
   // test add files to directory and check sorted correctly
   // test rename file extension of file in directory and check if sorted correctly
 }

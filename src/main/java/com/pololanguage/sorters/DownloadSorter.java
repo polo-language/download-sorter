@@ -36,13 +36,13 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Sets the concrete processor. */
-  void setProcessor(Processor processor) {
+  public void setProcessor(Processor processor) {
     this.processor = processor;
     processor.initialize(getHotFolders(), getSortSpecs());
   }
 
   /** Adds input directory to list. */
-  void addHotFolder(String dir) {
+  public void addHotFolder(String dir) {
     Path path = Paths.get(dir);
     if (!hotFolders.contains(path)) {
       hotFolders.add(path);
@@ -50,8 +50,13 @@ public class DownloadSorter implements Runnable {
   }
 
   /** Adds SortSpec to list. */
-  void addSortSpec(String rule, String dir, RuleType type) {
-    sortSpecs.add(new SortSpec(rule, dir, type));
+  public void addSortSpec(SortSpec spec) {
+    sortSpecs.add(spec);
+  }
+
+  /** Creates a {@code SortSpec} from the parameters and adds it to the list. */
+  public void addSortSpec(String rule, String dir, RuleType type) {
+    addSortSpec(new SortSpec(rule, dir, type));
   }
 
   /** Get unmodifiable copy of the hot folders. */

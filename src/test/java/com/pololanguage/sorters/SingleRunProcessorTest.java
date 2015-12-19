@@ -87,7 +87,7 @@ public class SingleRunProcessorTest {
   }
 
   /** Utility method to determine number of matching files in directory */
-  private int getNumMatches(Path dir, String rule, RuleType type) throws IOException {
+  private static int getNumMatches(Path dir, String rule, RuleType type) throws IOException {
     final PathMatcher matcher = FileSystems.getDefault().getPathMatcher(type.toString() +":"+ rule);
     int numMatches = 0;
 
